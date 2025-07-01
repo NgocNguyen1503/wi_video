@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/test-vue', function () {
+    return view('app');
+});
+Route::get('login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::get('google-login-callback', [\App\Http\Controllers\AuthController::class, 'googleLogin']);

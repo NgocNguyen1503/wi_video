@@ -19,4 +19,14 @@ class UserEloquentRepository extends EloquentRepository implements UserRepositor
     }
 
     // Deploy special methods.
+    /**
+     * Implement method find user using email
+     *
+     * @param mixed $email
+     * @return null | Collection user
+     */
+    public function findUserUsingEmail($email)
+    {
+        return $this->_model->where('email', $email)->first();
+    }
 }
