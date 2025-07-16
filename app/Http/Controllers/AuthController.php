@@ -2,62 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Factory\Auth\AuthFactory;
+use App\Factory\Auth\FacebookAuth;
 use App\Factory\Auth\GoogleAuth;
 use App\Repositories\Users\UserRepositoryInterface;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    private $userRepository;
+    private $userRepo;
 
-    public function __construct(
-        UserRepositoryInterface $userRepositoryInterface
-    ) {
-        $this->userRepository = $userRepositoryInterface;
+    public function __construct(UserRepositoryInterface $userRepo)
+    {
+        $this->userRepo = $userRepo;
     }
 
-    public function login()
+    public function auth()
     {
         return view('login');
     }
 
-    /**
-     * Controller method google login
-     *
-     * Using code and call to Grhap API
-     * @param \Illuminate\Http\Request $request
-     * @return mixed
-     */
-    public function googleLogin(Request $request)
+    public function redirect(Request $request, string $provider)
     {
-        $param = $request->all();
-        $googleAuth = new GoogleAuth();
+        $authFactory = AuthFactory::make($provider);
+        return redirect()->away($authFactory->getOAuthUrl());
+    }
+
+    public function callback(Request $request, string $provider)
+    {
+        $params = $request->all();
+        $authFactory = AuthFactory::make($provider);
         try {
-            // Get access token from google
-            $accessToken = $googleAuth->getAccessToken($param['code']);
-            $userInfo = $googleAuth->getUserInfo($accessToken);
-            // Check user info in DB
-            $user = $this->userRepository->findUserUsingEmail($userInfo['email']);
-            // User has ready, create session and go to home page.
+            $accessToken = $authFactory->getAccessToken($params['code']);
+            $userInfo = $authFactory->getUserInfo($accessToken);
+            $user = $this->userRepo->findUserUsingEmail($userInfo['email']);
             if (is_null($user)) {
-                // Add new user
-                $newUserInfo = [
+                $user = $this->userRepo->create([
                     'name' => $userInfo['name'],
                     'email' => $userInfo['email'],
-                    'avatar' => $userInfo['picture'],
-                    'google_id' => '',
-                    'facebook_id' => ''
-                ];
-                $user = $this->userRepository->create($newUserInfo);
+                    'avatar' => $userInfo['picture']
+                ]);
             }
             Auth::login($user);
             return redirect('/home');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect('/login');
+            return redirect('/auth');
         }
     }
 }

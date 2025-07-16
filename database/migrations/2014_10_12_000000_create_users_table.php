@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('avatar', 255)->nullable();
+            $table->text('avatar')->nullable();
             $table->string('google_id', 255)->nullable();
             $table->string('facebook_id', 255)->nullable();
             $table->timestamp('email_verified_at')->nullable();
