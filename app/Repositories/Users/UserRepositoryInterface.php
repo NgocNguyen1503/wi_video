@@ -7,4 +7,5 @@ interface UserRepositoryInterface
     // Define Specialized methods.
     // Define function get user using email
     public function findUserUsingEmail($email);
+    public function getUserInfo($id);
 }

@@ -52,4 +52,12 @@ class AuthController extends Controller
             return redirect('/auth');
         }
     }
+
+    public function logout(Request $request)
+    {
+        if (Auth::check()) {
+            Auth::logout();
+        }
+        return redirect('/auth');
+    }
 }

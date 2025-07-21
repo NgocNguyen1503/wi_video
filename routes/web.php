@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/auth');
 });
 
 Route::get('/test-vue', function () {
@@ -24,3 +25,5 @@ Route::get('/test-vue', function () {
 Route::get('/auth', [AuthController::class, 'auth'])->name('login');
 Route::get('/auth/{provider}/redirect', [AuthController::class, 'redirect']);
 Route::get('/auth/{provider}/callback', [AuthController::class, 'callback']);
+Route::get('/home', [HomeController::class, 'index']);
+Route::get('/logout', [AuthController::class, 'logout']);
