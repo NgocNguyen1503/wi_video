@@ -15,7 +15,7 @@
     <div id="main" class="col-md-12">
         @yield('content')
     </div>
-    <script>{{ asset('assets/jQuery.js') }}</script>
+    <script src="{{ asset('assets/jQuery.js') }}"></script>
     <script src="{{ asset('assets/bootstrap/dist/js/bootstrap.js') }}"></script>
 </body>
 

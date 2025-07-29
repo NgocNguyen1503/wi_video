@@ -48,7 +48,7 @@
     height: 30vh;
 }
 .follow-section span {
-    color: #DB2843;
+    color: #db2843;
     font-weight: bolder;
 }
 .btn-logout {
@@ -71,7 +71,7 @@
     color: gray;
 }
 .poster-information .txt-follow {
-    color: #DB2843;
+    color: #db2843;
     font-weight: bold;
     margin-left: 15px;
 }
@@ -148,7 +148,7 @@
     width: 20%;
 }
 #form-comment {
-    margin-top: 25px;;
+    margin-top: 25px;
 }
 .d-flex {
     display: flex;

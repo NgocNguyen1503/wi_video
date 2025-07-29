@@ -27,3 +27,4 @@ Route::get('/auth/{provider}/redirect', [AuthController::class, 'redirect']);
 Route::get('/auth/{provider}/callback', [AuthController::class, 'callback']);
 Route::get('/home', [HomeController::class, 'index']);
 Route::get('/logout', [AuthController::class, 'logout']);
+Route::post('/upload-video', [HomeController::class, 'uploadVideo']);
