@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseApi;
+use App\Models\Video;
 use App\Repositories\Users\UserRepositoryInterface;
 use App\Repositories\Videos\VideoRepositoryInterface;
 use App\Services\GoogleDriveService;
@@ -15,11 +17,13 @@ class HomeController extends Controller
 {
     private $userRepo;
     private $videoRepo;
+    private $responseAPI;
 
     public function __construct(UserRepositoryInterface $userRepo, VideoRepositoryInterface $videoRepo)
     {
         $this->userRepo = $userRepo;
         $this->videoRepo = $videoRepo;
+        $this->responseAPI = new ResponseApi();
     }
     /**
      * Controller method render home view blade
@@ -62,5 +66,34 @@ class HomeController extends Controller
             }
         }
         return redirect('/home');
+    }
+
+    public function getVideo(Request $request)
+    {
+        $param = $request->all();
+        $userId = Auth::user()->id;
+        $video = $this->videoRepo->getVideo($param['video_id']);
+        $isLike = false;
+        $myVideo = false;
+        $follow = false;
+        if (count($video->likes) > 0) {
+            foreach ($video->likes as $like) {
+                if ($like->user_id == $userId) {
+                    $isLike = true;
+                }
+            }
+        }
+        if ($video->author_id == $userId) {
+            $myVideo = true;
+        } else {
+            $follow = $this->userRepo->find($userId)->followers->pluck('follow_id')->toArray();
+            if (in_array($userId, $follow)) {
+                $follow = true;
+            }
+        }
+        $video->is_like = $isLike;
+        $video->my_video = $myVideo;
+        $video->follow = $follow;
+        return $this->responseAPI->success($video);
     }
 }
