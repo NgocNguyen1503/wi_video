@@ -19,4 +19,8 @@ class VideoEloquentRepository extends EloquentRepository implements VideoReposit
     }
 
     // Deploy special methods.
+    public function getVideo($id)
+    {
+        return $this->_model->with('likes', 'author', 'author.followers')->where('id', $id)->first();
+    }
 }
