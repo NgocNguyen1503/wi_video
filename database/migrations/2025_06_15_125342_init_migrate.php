@@ -11,6 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('comments', function (Blueprint $table) {
+            $table->id();
             $table->integer('video_id')->index();
             $table->string('comment', 255)->nullable();
             $table->integer('user_id')->index();
@@ -18,12 +19,14 @@ return new class extends Migration {
         });
 
         Schema::create('likes', function (Blueprint $table) {
+            $table->id();
             $table->integer('video_id')->index();
             $table->integer('user_id')->index();
             $table->timestamps();
         });
 
         Schema::create('videos', function (Blueprint $table) {
+            $table->id();
             $table->string('video_url', 255)->nullable();
             $table->string('caption', 255)->nullable();
             $table->integer('author_id')->index();
@@ -31,12 +34,14 @@ return new class extends Migration {
         });
 
         Schema::create('follows', function (Blueprint $table) {
+            $table->id();
             $table->integer('follow_id')->index();
             $table->integer('user_id')->index();
             $table->timestamps();
         });
 
         Schema::create('pushes', function (Blueprint $table) {
+            $table->id();
             $table->string('content', 255)->nullable();
             $table->integer('user_id')->index();
             $table->string('status')->nullable();
@@ -44,6 +49,7 @@ return new class extends Migration {
         });
 
         Schema::create('reports', function (Blueprint $table) {
+            $table->id();
             $table->string('content', 255)->nullable();
             $table->integer('user_id')->index();
             $table->integer('video_id')->index();
