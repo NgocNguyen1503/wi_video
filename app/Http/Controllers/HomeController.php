@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseApi;
+use App\Models\Follow;
+use App\Models\User;
 use App\Models\Video;
 use App\Repositories\Users\UserRepositoryInterface;
 use App\Repositories\Videos\VideoRepositoryInterface;
 use App\Services\GoogleDriveService;
+use App\Services\GoogleHangoutWebhook;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Services\GoogleSpreadSheetService;
 
 class HomeController extends Controller
 {
@@ -95,5 +99,38 @@ class HomeController extends Controller
         $video->my_video = $myVideo;
         $video->follow = $follow;
         return $this->responseAPI->success($video);
+    }
+
+    public function sendReport(Request $request)
+    {
+        $param = $request->all();
+
+        // $googleHangout = new GoogleHangoutWebhook();
+        // $googleHangout->reportForWebHook(
+        //     $param['report_content'],
+        //     Auth::user()->name,
+        // );
+
+        $video = Video::find($param['video_id']);
+
+        // Insert report to Google Spreadsheets
+        $googleSpreadsheet = new GoogleSpreadSheetService();
+        $data = [
+            'values' => [
+                (string) $video->id,
+                $video->caption,
+                Auth::user()->name . ' bao cao ' . $param['report_content'],
+                $video->video_url,
+                (string) Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+        ];
+
+        try {
+            $googleSpreadsheet->writeSheet('Trang tính1', $data);
+        } catch (\Exception $e) {
+            Log::error($e);
+        }
+
+        return $this->responseAPI->success();
     }
 }

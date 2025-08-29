@@ -31,4 +31,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::post('/upload-video', [HomeController::class, 'uploadVideo']);
     Route::get('/get-video', [HomeController::class, 'getVideo']);
+    Route::post('/send-report', [HomeController::class, 'sendReport']);
 });
