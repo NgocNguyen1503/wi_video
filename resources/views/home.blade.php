@@ -57,27 +57,5 @@
         </form>
     </div>
 
-    <!-- Modal report -->
-    <div class="modal fade" id="report-modal" tabindex="-1" role="dialog" aria-labelledby="report-modal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="report-modal">Báo cáo vi phạm</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <label for="report-content">Nội dung báo cáo (<span class="text-danger">*</span>) </label>
-                    <textarea name="report" class="form-control" id="report-content"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-danger">Gửi báo cáo</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @vite('resources/js/app.js')
 @endsection

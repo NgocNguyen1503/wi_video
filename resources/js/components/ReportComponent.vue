@@ -1,43 +1,28 @@
 <template>
-    <div class="col-md-6" id="content">
-        <div class="row">
-            <div class="clear-fix"></div>
-            <div class="col-md-12 poster-information">
-                <p class="poster-name">{{ video?.author.name }}</p>
-                <span v-if="!video?.my_video && !video?.follow" class="txt-follow">Theo dõi</span>
-                <span v-if="!video?.my_video && video?.follow" class="txt-follow">Bỏ theo dõi</span>
-                <i class="fa fa-heart-circle-plus text-danger" id="icon-like"></i>
-                <a href="#" data-toggle="modal" data-target="#report-modal">
-                    <img src="../../../public/assets/images/ic_report.png" width="18px" height="18px" alt=""
-                        id="icon-report">
-                </a>
-            </div>
-            <div class="col-md-12" id="video-section">
-                <div class="show-video" id="show-video">
-                    <iframe :src="video?.video_url" allow="autoplay"></iframe>
-                    <p id="video-caption">{{ video?.caption }}</p>
+    <div class="modal fade" id="report-modal" tabindex="-1" role="dialog" aria-labelledby="report-modal"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="report-modal">Báo cáo vi phạm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="col-md-12" id="btn-control">
-                    <button class="btn btn-danger">
-                        &#60;
-                    </button>
-                    <button class="btn btn-danger" data-toggle="modal" v-on:click="back()"
-                        data-target="#upload-videos-modal">
-                        <strong>+</strong> </button>
-                    <button class="btn btn-danger" v-on:click="next()">
-                        &#62;
-                    </button>
+                <div class="modal-body">
+                    <label for="report-content">Nội dung báo cáo (<span class="text-danger">*</span>) </label>
+                    <textarea name="report" class="form-control" v-model="reportContent" id="report-content"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-danger" v-on:click="sendReport()">Gửi báo cáo</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <ReportComponent :videoId="videoId" />
 </template>
 
 <script>
-import ReportComponent from './ReportComponent.vue';
-
 //import Vue from 'vue'
 //import axios from 'axios'
 // import component1 from 'component1'
@@ -47,16 +32,15 @@ export default {
     /***********************************************************************************************************
      ******************************* Pass data to child component **********************************************
      **********************************************************************************************************/
-    props: ["txtMSG"],
-    components: { ReportComponent },
+    props: ["videoId"],
+    // components: {component1, component2},
     data() {
         /***********************************************************************************************************
          ******************************* Initialize global variables ***********************************************
          **********************************************************************************************************/
         return {
             msg: 'Tôi là thành phần con.',
-            video: null,
-            videoId: 1
+            reportContent: ''
         }
     },
     /**
@@ -90,7 +74,7 @@ export default {
         /***********************************************************************************************************
          ******************** Once created, the interface is displayed and calls mounted. **************************
          **********************************************************************************************************/
-        this.callAPI();
+        // this.callAPI();
     },
     watch: {
         /***********************************************************************************************************
@@ -133,17 +117,6 @@ export default {
             console.log(pageNum);
             return false;
         },
-
-        next() {
-            this.videoId = this.videoId + 1;
-            this.callAPI();
-        },
-
-        back() {
-            this.videoId = this.videoId - 1;
-            this.callAPI();
-        },
-
         /***********************************************************************************************************
          ******* Async and await functions for manipulating server-side data through internal API protocols ********
          **********************************************************************************************************/
@@ -151,14 +124,14 @@ export default {
         /**
          * Call API sample
          */
-        async callAPI() {
+        async sendReport() {
             try {
-                const callAPI = await axios.get('http://localhost:8000/get-video?video_id=' + this.videoId, {
+                const callAPI = await axios.post('http://localhost:8000/send-report', {
                     /************ Attach param for request here ***************/
+                    video_id: this.videoId,
+                    report_content: this.reportContent
                 });
-                if (callAPI.data.code == 200) {
-                    this.video = callAPI.data.data;
-                }
+                console.log(callAPI.data.data);
             } catch (err) {
                 console.log(err);
             }
