@@ -85,12 +85,14 @@ export default {
          **********************************************************************************************************/
         console.log('Init created component and call to function get data from api server.');
         // this.joinRoom();
+        this.callAPI();
+        this.saveVideoId();
+
     },
     mounted() {
         /***********************************************************************************************************
          ******************** Once created, the interface is displayed and calls mounted. **************************
          **********************************************************************************************************/
-        this.callAPI();
     },
     watch: {
         /***********************************************************************************************************
@@ -115,6 +117,9 @@ export default {
          */
         defaultFunction() {
             this.msg = "Replace message here!";
+        },
+        saveVideoId() {
+            localStorage.setItem('video_id', this.videoId);
         },
         // Join a room
         joinRoom() {

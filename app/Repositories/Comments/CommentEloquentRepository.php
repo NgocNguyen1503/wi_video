@@ -19,4 +19,18 @@ class CommentEloquentRepository extends EloquentRepository implements CommentRep
     }
 
     // Deploy special methods.
+    public function getVideoComments($videoId)
+    {
+        return $this->_model->join('users', 'comments.user_id', 'users.id')
+            ->select(
+                'users.id',
+                'users.name',
+                'users.avatar',
+                'comments.id as comment_id',
+                'comments.comment',
+                'comments.created_at'
+            )
+            ->where('video_id', $videoId)
+            ->orderBy('id', 'ASC')->get();
+    }
 }

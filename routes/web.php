@@ -32,4 +32,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/upload-video', [HomeController::class, 'uploadVideo']);
     Route::get('/get-video', [HomeController::class, 'getVideo']);
     Route::post('/send-report', [HomeController::class, 'sendReport']);
+    Route::get('/list-comment', [HomeController::class, 'listComment']);
+    Route::post('/send-comment', [HomeController::class, 'sendComment']);
 });
